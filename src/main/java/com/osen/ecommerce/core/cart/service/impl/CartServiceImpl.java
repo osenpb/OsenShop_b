@@ -2,6 +2,7 @@ package com.osen.ecommerce.core.cart.service.impl;
 
 
 import com.osen.ecommerce.auth.domain.models.User;
+import com.osen.ecommerce.common.exceptions.InsufficientStockException;
 import com.osen.ecommerce.core.cart.models.Cart;
 import com.osen.ecommerce.core.cart.models.CartItem;
 import com.osen.ecommerce.core.cart.repositories.CartItemRepository;
@@ -13,12 +14,14 @@ import com.osen.ecommerce.core.product.model.Product;
 import com.osen.ecommerce.core.product.service.ProductService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
 
@@ -53,13 +56,26 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void addProduct(User user, Long productId, Integer quantity) {
+    public void addProduct(User user, Long productId, Integer quantity) throws InsufficientStockException {
         Cart cart = findOrCreateCart(user);
 
+        Product product = productService.findById(productId);
         CartItem item = cartItemService
                 .findByCart_IdAndProduct_Id(cart.getId(), productId)
                 .orElseGet(() -> createItem(cart, productId));
 
+        int newQuantity = item.getQuantity() + quantity;
+
+        if (newQuantity > product.getStock()) {
+            log.warn(
+                    "Stock insuficiente. Producto={}, stock={}, solicitado={}",
+                    productId,
+                    product.getStock(),
+                    newQuantity
+            );
+            throw new InsufficientStockException("Producto: " + product.getName());
+        }
+        log.info("Producto guardado correctamente");
         item.setQuantity(item.getQuantity() + quantity);
         cartItemService.save(item);
     }
@@ -89,6 +105,9 @@ public class CartServiceImpl implements CartService {
         cartRepository.findByUser(user)
                 .ifPresent(cart -> cartItemService.deleteAllCartItemsByCartId(cart.getId()));
     }
-
+//
+//    private verifyStock(Product product, Cart cart,Double quantity) {
+//
+//    }
 
 }

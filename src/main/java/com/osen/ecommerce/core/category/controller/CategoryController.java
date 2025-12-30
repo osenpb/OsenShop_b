@@ -18,14 +18,14 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @GetMapping("/categories")
+    @GetMapping
     public ResponseEntity<?> categories() {
         List<Category> categoryList = categoryService.findAll();
         List<CategoryResponse> categoryResponseList =CategoryMapper.toListDto(categoryList);
         return ResponseEntity.ok(categoryResponseList);
     }
 
-    @PostMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<?> edit(@PathVariable Long id) {
         return null;
     }

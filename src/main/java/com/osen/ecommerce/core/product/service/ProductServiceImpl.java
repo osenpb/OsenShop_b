@@ -2,12 +2,14 @@ package com.osen.ecommerce.core.product.service;
 
 import com.osen.ecommerce.core.category.model.Category;
 import com.osen.ecommerce.core.category.service.CategoryService;
-import com.osen.ecommerce.core.product.dtos.ProductRequest;
+import com.osen.ecommerce.core.product.dtos.CreateProductRequest;
+import com.osen.ecommerce.core.product.dtos.UpdateProductRequest;
 import com.osen.ecommerce.core.product.model.Product;
 import com.osen.ecommerce.core.product.repository.ProductRepository;
 import com.osen.ecommerce.common.exceptions.EntityNotFound;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,7 +33,7 @@ public class ProductServiceImpl implements ProductService{
                 .orElseThrow(() -> new EntityNotFound("Product not found with id: " + id));
     }
     @Override
-    public Product save(ProductRequest productRequest) {
+    public Product save(CreateProductRequest productRequest) {
 
         Category category = categoryService.findById(productRequest.categoryId());
         Product product = new Product(
@@ -54,15 +56,11 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public Product update(Product product) {
-        return productRepository.save(product);
-    }
-
-    @Override
-    public void updateFromRequest(Long id, ProductRequest request) {
+    @Transactional
+    public Product update(Long id, UpdateProductRequest request) {
 
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFound("Producto no encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
 
         Category category = categoryService.findById(request.categoryId());
 
@@ -70,10 +68,11 @@ public class ProductServiceImpl implements ProductService{
         product.setPrice(request.price());
         product.setStock(request.stock());
         product.setImageUrl(request.imageUrl());
-        //product.setIsActive(request.isActive());
+        product.setDescription(request.description());
+        product.setIsActive(request.isActive());
         product.setCategory(category);
 
-        productRepository.save(product);
+        // NO necesitas save() si estás en @Transactional
+        return productRepository.save(product);
     }
-
 }

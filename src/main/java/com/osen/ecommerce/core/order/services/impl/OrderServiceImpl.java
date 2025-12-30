@@ -1,6 +1,7 @@
 package com.osen.ecommerce.core.order.services.impl;
 
 import com.osen.ecommerce.auth.domain.models.User;
+import com.osen.ecommerce.common.exceptions.InsufficientStockException;
 import com.osen.ecommerce.core.cart.models.Cart;
 import com.osen.ecommerce.core.cart.models.CartItem;
 import com.osen.ecommerce.core.cart.service.CartItemService;
@@ -14,6 +15,7 @@ import com.osen.ecommerce.core.order.services.OrderService;
 
 import com.osen.ecommerce.common.exceptions.EntityNotFound;
 import com.osen.ecommerce.core.product.model.Product;
+import com.osen.ecommerce.core.product.repository.ProductRepository;
 import com.osen.ecommerce.core.product.service.ProductService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +39,7 @@ public class OrderServiceImpl implements OrderService {
     private final CartService cartService;
     private final CartItemService cartItemService;
     private final OrderItemService orderItemService;
+    private final ProductRepository productRepository;
 
     @Override
     public List<Order> findAll() {
@@ -63,8 +66,8 @@ public class OrderServiceImpl implements OrderService {
         for (CartItem cartItem : cartItems) {
             Product product = productService.findById(cartItem.getProduct().getId());
             if (product.getStock() < cartItem.getQuantity()) {
-                log.error("Stock insuficiente para el producto: " + product.getName());
-                throw new EntityNotFound("Not enough stock: " + product.getName()); // InsufficientStockException
+                log.error("Stock insuficiente para el producto: {}", product.getName());
+                throw new InsufficientStockException("Not enough stock: " + product.getName());
             }
         }
         return cartItems;
@@ -94,7 +97,7 @@ public class OrderServiceImpl implements OrderService {
             orderItemService.save(orderItem);
 
             product.setStock(product.getStock() - cartItem.getQuantity());
-            productService.update(product);
+            productRepository.save(product); // x ahora asi
         }
     }
 

@@ -5,7 +5,9 @@ import com.osen.ecommerce.core.category.model.Category;
 import com.osen.ecommerce.core.category.service.CategoryService;
 import com.osen.ecommerce.core.order.models.Order;
 import com.osen.ecommerce.core.order.services.OrderService;
-import com.osen.ecommerce.core.product.dtos.ProductRequest;
+import com.osen.ecommerce.core.product.dtos.CreateProductRequest;
+import com.osen.ecommerce.core.product.dtos.UpdateProductRequest;
+import com.osen.ecommerce.core.product.mapper.ProductMapper;
 import com.osen.ecommerce.core.product.model.Product;
 import com.osen.ecommerce.core.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +55,7 @@ public class AdminController {
     }
 
     @PostMapping("/products/new")
-    public ResponseEntity<?> crearProducto(@RequestBody ProductRequest product) {
+    public ResponseEntity<?> crearProducto(@RequestBody CreateProductRequest product) {
 
         productService.save(product);
         log.info("Producto guardado exitosamente");
@@ -74,11 +76,15 @@ public class AdminController {
         //return "admin/product-form-edit";
     }
 
-    @PutMapping("/products/{id}")
-    public ResponseEntity<Void> actualizarProducto(@PathVariable Long id, @RequestBody ProductRequest request) {
-        productService.updateFromRequest(id, request);
-        return ResponseEntity.noContent().build(); // 204
-    }
+//    @PutMapping("/products/{id}")
+//    public ResponseEntity<Void> actualizarProducto(@PathVariable Long id, @RequestBody UpdateProductRequest request) {
+//
+//        Category category = categoryService.findById(request.categoryId());
+//        Product product = ProductMapper.toEntity(request, category);
+//
+//        productService.update(product);
+//        return ResponseEntity.noContent().build(); // 204
+//    }
 
     @DeleteMapping("/products/eliminar/{id}")
     public ResponseEntity<Void> eliminarProducto(@PathVariable Long id) {

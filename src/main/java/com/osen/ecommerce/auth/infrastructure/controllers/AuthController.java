@@ -9,6 +9,7 @@ import com.osen.ecommerce.auth.application.dtos.RegisterRequest;
 import com.osen.ecommerce.auth.application.dtos.LoginRequest;
 import com.osen.ecommerce.auth.domain.services.UserService;
 import com.osen.ecommerce.common.exceptions.EntityNotFound;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -76,7 +77,7 @@ public class AuthController {
     @GetMapping("/check-status")
     public ResponseEntity<AuthResponse> checkStatus(
             @AuthenticationPrincipal User user,
-            HttpServletRequest request) {
+            HttpServletRequest request) throws EntityNotFoundException {
         User myUser = userService.findByEmail(user.getEmail()).orElseThrow(() -> new EntityNotFound("User not found with email " + user.getEmail()));
         log.info("User encontrado: {}", user.getFirstName());
         UserResponse userResponse = AuthMapper.toDto(myUser);

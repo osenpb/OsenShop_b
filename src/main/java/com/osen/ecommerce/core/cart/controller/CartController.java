@@ -48,7 +48,6 @@ public class CartController {
         // List<CartItemResponse> cartItemsResponse = CartItemMapper.toListDto(cartItems);
         CartResponse cartResponse = CartMapper.toDto(cartFound);
         log.info("Procesando info del carrito");
-        //Double total = cartItems.stream().mapToDouble(CartItem::subTotal).sum();
 
         return ResponseEntity.ok(cartResponse);
     }
@@ -58,6 +57,7 @@ public class CartController {
             @AuthenticationPrincipal User user,
             @RequestBody AddToCartRequest request
     ) {
+
         cartService.addProduct(user, request.productId(), request.quantity());
         return ResponseEntity.accepted().build();
     }
