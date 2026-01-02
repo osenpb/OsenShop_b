@@ -2,13 +2,16 @@ package com.osen.ecommerce.core.order.controller;
 
 import com.osen.ecommerce.auth.domain.models.User;
 import com.osen.ecommerce.auth.domain.services.UserService;
+import com.osen.ecommerce.common.exceptions.AccessDeniedException;
 import com.osen.ecommerce.common.exceptions.EntityNotFound;
 import com.osen.ecommerce.core.cart.models.Cart;
 import com.osen.ecommerce.core.cart.models.CartItem;
 import com.osen.ecommerce.core.cart.service.CartItemService;
 import com.osen.ecommerce.core.cart.service.CartService;
 import com.osen.ecommerce.core.order.dtos.OrderFormRequest;
+import com.osen.ecommerce.core.order.dtos.OrderItemResponse;
 import com.osen.ecommerce.core.order.dtos.OrderResponse;
+import com.osen.ecommerce.core.order.mappers.OrderItemMapper;
 import com.osen.ecommerce.core.order.mappers.OrderMapper;
 import com.osen.ecommerce.core.order.models.Order;
 import com.osen.ecommerce.core.order.models.OrderItem;
@@ -20,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +35,7 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/orders")
+@RequestMapping("/orders")
 public class OrderController {
 
     private final UserService userService;
@@ -42,6 +46,7 @@ public class OrderController {
     private final OrderItemService orderItemService;
 
 //    List<OrderResponse> tengo q devolver algo asi
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<?> getAllOrders() {
        List<Order> orders = orderService.findAll();
@@ -49,9 +54,9 @@ public class OrderController {
        return ResponseEntity.ok(orderResponseList);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/checkout")
     public ResponseEntity<?> procesarPedido(@AuthenticationPrincipal User user, @RequestBody OrderFormRequest orderForm) {
-
         Order successfulOrder = orderService.processOrder(user, orderForm);
         OrderResponse orderResponse = OrderMapper.toDto(successfulOrder);
         log.info("Compra realizada con exito");
@@ -59,6 +64,7 @@ public class OrderController {
 
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/order-success/{id}")
     public ResponseEntity<?> confirmacionPedido(@AuthenticationPrincipal User user, @PathVariable Long id) {
 
@@ -66,18 +72,17 @@ public class OrderController {
         Order order = orderService.findById(id);
 
         if (!order.getUser().getId().equals(user.getId())) {
-            return ResponseEntity.status(403).body("Acceso denegado");
+            throw new AccessDeniedException("Acceso denegado");
         }
 
         List<OrderItem> orderItems = order.getOrderItemList();
+        List<OrderItemResponse> orderItemResponseList = OrderItemMapper.toListDto(orderItems);
 
-        return ResponseEntity.ok(Map.of(
-                "order", order,
-                "orderItems", orderItems
-        ));
+        return ResponseEntity.ok(orderItemResponseList);
 
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/my-orders")
     public ResponseEntity<List<OrderResponse>> ordenesFromUser(@AuthenticationPrincipal User user) {
         User myUser = userService.findById(user.getId());
@@ -85,6 +90,12 @@ public class OrderController {
         List<OrderResponse> orderResponseList = OrderMapper.toOrderDtoList(orders);
 
         return ResponseEntity.ok(orderResponseList);
+    }
+
+    @GetMapping("/update-status")
+    public ResponseEntity<?> updateStatusOrder(@RequestBody Long orderId){
+        orderService.updateStatusOrder(orderId);
+        return ResponseEntity.ok().build();
     }
 
 }

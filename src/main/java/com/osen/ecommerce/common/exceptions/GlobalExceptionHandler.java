@@ -51,4 +51,15 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.badRequest().build();
     }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<?> accessDenied(Exception exception){
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                "Acceso denegado"
+        );
+        return ResponseEntity.badRequest().build();
+    }
+
 }

@@ -125,5 +125,15 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findByUser(user);
     }
 
+    @Override
+    public void updateStatusOrder(Long orderId) {
+        Order order = findById(orderId);
+        if(order.getStatus().equals("PENDING")){
+            order.setStatus("DELIVERED");
+        }
+        save(order);
+
+    }
+
 
 }

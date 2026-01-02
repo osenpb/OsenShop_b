@@ -102,12 +102,9 @@ public class CartServiceImpl implements CartService {
 
     @Transactional
     public void clearUserCart(User user) {
-        cartRepository.findByUser(user)
-                .ifPresent(cart -> cartItemService.deleteAllCartItemsByCartId(cart.getId()));
-    }
-//
-//    private verifyStock(Product product, Cart cart,Double quantity) {
-//
-//    }
+        Cart cart = cartRepository.findByUser(user)
+                .orElseThrow(() -> new EntityNotFound("Cart not found"));
 
+        cart.getCartItemList().clear();
+    }
 }

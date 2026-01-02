@@ -14,5 +14,5 @@ public interface OrderService {
     void deleteById(Long id);
     Order processOrder(User user, OrderFormRequest orderForm);
     List<Order> findByUser(User user);
-
+    void updateStatusOrder(Long orderId);
 }

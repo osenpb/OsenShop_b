@@ -32,11 +32,15 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // no se generara una cookie que guarde la info
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(String.format("%s/auth/**", API_VERSION)).permitAll()
-                        .requestMatchers(String.format("%s/admin/**", API_VERSION)).permitAll() //hasRole("ADMIN")
-                        .requestMatchers(String.format("%s/users/**", API_VERSION)).permitAll() //hasRole("ADMIN")
+                        .requestMatchers(String.format("%s/admin/**", API_VERSION)).hasRole("ADMIN") //hasRole("ADMIN")
+                        .requestMatchers(String.format("%s/users/**", API_VERSION)).authenticated() //hasRole("ADMIN")
+                        .requestMatchers(String.format("%s/cart/**", API_VERSION)).hasRole("USER")
+                        .requestMatchers(String.format("%s/orders/**", API_VERSION)).authenticated()
+                        .requestMatchers(String.format("%s/categories/**", API_VERSION)).authenticated()
+                        .requestMatchers(String.format("%s/products/**", API_VERSION)).authenticated()
                         .anyRequest().authenticated()
                 )//registra el filtro ANTES del de login por formulario
 //                .oauth2Login(Customizer.withDefaults()) // para registro OAuth2

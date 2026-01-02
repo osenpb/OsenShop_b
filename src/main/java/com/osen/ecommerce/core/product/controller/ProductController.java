@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.service.annotation.HttpExchange;
 
@@ -22,7 +23,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/products")
+@RequestMapping("/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -33,6 +34,7 @@ public class ProductController {
         this.categoryService = categoryService;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getById(@PathVariable Long id) {
 
@@ -40,12 +42,13 @@ public class ProductController {
         ProductResponse productResponse = ProductMapper.toDto(product);
         return ResponseEntity.ok(productResponse);
     }
-
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping
     public ResponseEntity<?> saveProduct(@Valid CreateProductRequest productRequest) {
         return null;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody @Valid UpdateProductRequest productRequest) throws EntityNotFoundException {
         Product updatedProducto = productService.update(id, productRequest);
@@ -53,7 +56,7 @@ public class ProductController {
         return ResponseEntity.ok(productResponse);
     }
 
-
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProduct(){
         List<ProductResponse> productResponseList = productService.findAll().stream().map(ProductMapper::toDto).toList();

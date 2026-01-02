@@ -26,7 +26,7 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/cart")
+@RequestMapping("/cart")
 public class CartController {
 
     private final CartService cartService;
