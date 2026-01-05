@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
                 exception.getMessage(),
                 "Credenciales invalidas o incorrectas"
         );
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @ExceptionHandler(InsufficientStockException.class)

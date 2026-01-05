@@ -45,7 +45,6 @@ public class OrderController {
     private final OrderService orderService;
     private final OrderItemService orderItemService;
 
-//    List<OrderResponse> tengo q devolver algo asi
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<?> getAllOrders() {
@@ -91,7 +90,7 @@ public class OrderController {
 
         return ResponseEntity.ok(orderResponseList);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/update-status")
     public ResponseEntity<?> updateStatusOrder(@RequestBody Long orderId){
         orderService.updateStatusOrder(orderId);

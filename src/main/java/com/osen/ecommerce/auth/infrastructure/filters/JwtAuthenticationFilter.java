@@ -67,7 +67,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
     } catch (Exception e) {
-        log.warn("Error en el JwtAuthenticationFilter");
+        throw new TokenExpiredException("Token invalido o expirado");
     }
         filterChain.doFilter(request, response);
     }

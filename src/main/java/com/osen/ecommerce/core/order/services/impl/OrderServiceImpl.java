@@ -97,7 +97,7 @@ public class OrderServiceImpl implements OrderService {
             orderItemService.save(orderItem);
 
             product.setStock(product.getStock() - cartItem.getQuantity());
-            productRepository.save(product); // x ahora asi
+            productRepository.save(product);
         }
     }
 
@@ -128,9 +128,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void updateStatusOrder(Long orderId) {
         Order order = findById(orderId);
-        if(order.getStatus().equals("PENDING")){
-            order.setStatus("DELIVERED");
-        }
+        if(order.getStatus().equals("PENDING")){ order.setStatus("DELIVERED"); }
+        if(order.getStatus().equals("DELIVERED")){ order.setStatus("PENDING"); }
         save(order);
 
     }

@@ -1,3 +1,0 @@
-# Issue 01
-- Explota cuando el token expira, ocupa un GlobalHandler y un JwtValidationException
-- Ocupa un ErrorReponse para customizar el error

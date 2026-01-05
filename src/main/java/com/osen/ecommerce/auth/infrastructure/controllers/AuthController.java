@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -78,6 +79,12 @@ public class AuthController {
     public ResponseEntity<AuthResponse> checkStatus(
             @AuthenticationPrincipal User user,
             HttpServletRequest request) throws EntityNotFoundException {
+
+        // cuando la primera vez se chequea la existencia de un token
+        if (user == null || user.getEmail() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         User myUser = userService.findByEmail(user.getEmail()).orElseThrow(() -> new EntityNotFound("User not found with email " + user.getEmail()));
         log.info("User encontrado: {}", user.getFirstName());
         UserResponse userResponse = AuthMapper.toDto(myUser);
