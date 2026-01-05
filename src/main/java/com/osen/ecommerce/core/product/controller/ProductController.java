@@ -56,7 +56,7 @@ public class ProductController {
         return ResponseEntity.ok(productResponse);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    //@PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProduct(){
         List<ProductResponse> productResponseList = productService.findAll().stream().map(ProductMapper::toDto).toList();

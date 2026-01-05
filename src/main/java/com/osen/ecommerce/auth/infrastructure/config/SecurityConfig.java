@@ -4,6 +4,7 @@ import com.osen.ecommerce.auth.infrastructure.filters.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -40,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers(String.format("%s/cart/**", API_VERSION)).hasRole("USER")
                         .requestMatchers(String.format("%s/orders/**", API_VERSION)).authenticated()
                         .requestMatchers(String.format("%s/categories/**", API_VERSION)).authenticated()
+                        .requestMatchers(HttpMethod.GET, String.format("%s/products", API_VERSION)).permitAll()
                         .requestMatchers(String.format("%s/products/**", API_VERSION)).authenticated()
                         .anyRequest().authenticated()
                 )//registra el filtro ANTES del de login por formulario

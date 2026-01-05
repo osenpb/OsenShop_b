@@ -1,3 +1,15 @@
+
+INSERT INTO users (first_name, last_name, email, password, role)
+VALUES
+('osen','osen','osen@osen.com',
+ '$2a$12$GpKmjCGpWEm8TrOuUFvrDOEXWVyYLvHBJbCYu6k7xzOeOZxyNeL56',
+ 'ROLE_USER'),
+
+('admin','admin','admin@admin.com',
+ '$2a$12$ZtiZcpx.HubSRA7UCNSIzeLOmD.jJBGjxrVW2SOjKErdkDicyoRz6',
+ 'ROLE_ADMIN');
+
+
 INSERT INTO category (name)
 VALUES
   ('Audífonos'),
@@ -17,15 +29,15 @@ INSERT INTO products (
 )
 VALUES
   ('Audífonos Sony WH-1000XM5', 'Audífonos inalámbricos con cancelación de ruido de Sony', 1499.00, 12,
-   'https://example.com/images/sony-wh1000xm5.jpg',
+   'https://eatkxdfnzqpqmtljjxye.supabase.co/storage/v1/object/public/previews/ia_image_cellphone.png',
    NOW(), TRUE, 1),
 
   ('Audífonos Bose QuietComfort 45', 'Audífonos Bose con excelente cancelación de ruido y comodidad', 1399.00, 8,
-   'https://example.com/images/bose-qc45.jpg',
+   'https://eatkxdfnzqpqmtljjxye.supabase.co/storage/v1/object/public/previews/ia_image_cellphone.png',
    NOW(), TRUE, 1),
 
   ('Audífonos Inalámbricos JBL Tune 230NC', 'Audífonos JBL inalámbricos con sonido potente y ligero', 399.00, 20,
-   'https://example.com/images/jbl-230nc.jpg',
+   'https://eatkxdfnzqpqmtljjxye.supabase.co/storage/v1/object/public/previews/ia_image_cellphone.png',
    NOW(), TRUE, 1);
 
 
@@ -41,15 +53,15 @@ INSERT INTO products (
 )
 VALUES
   ('Samsung Galaxy S23', 'Smartphone Samsung con cámara avanzada y pantalla AMOLED', 3299.00, 10,
-   'https://example.com/images/galaxy-s23.jpg',
+   'https://eatkxdfnzqpqmtljjxye.supabase.co/storage/v1/object/public/previews/ia_image_cellphone.png',
    NOW(), TRUE, 2),
 
   ('iPhone 14', 'iPhone 14 con chip A15 y cámara dual avanzada', 3899.00, 7,
-   'https://example.com/images/iphone-14.jpg',
+   'https://eatkxdfnzqpqmtljjxye.supabase.co/storage/v1/object/public/previews/ia_image_cellphone.png',
    NOW(), TRUE, 2),
 
   ('Xiaomi Redmi Note 12', 'Smartphone Xiaomi económico con buena batería y pantalla AMOLED', 1099.00, 18,
-   'https://example.com/images/redmi-note-12.jpg',
+   'https://eatkxdfnzqpqmtljjxye.supabase.co/storage/v1/object/public/previews/ia_image_cellphone.png',
    NOW(), TRUE, 2);
 
 
@@ -65,13 +77,13 @@ INSERT INTO products (
 )
 VALUES
   ('Teclado Mecánico Logitech G Pro X', 'Teclado mecánico para gamers con switches personalizables', 699.00, 15,
-   'https://example.com/images/logitech-gpro-x.jpg',
+   'https://eatkxdfnzqpqmtljjxye.supabase.co/storage/v1/object/public/previews/ia_image_cellphone.png',
    NOW(), TRUE, 3),
 
   ('Teclado Mecánico Redragon Kumara K552', 'Teclado mecánico económico con retroiluminación LED', 249.00, 30,
-   'https://example.com/images/redragon-k552.jpg',
+   'https://eatkxdfnzqpqmtljjxye.supabase.co/storage/v1/object/public/previews/ia_image_cellphone.png',
    NOW(), TRUE, 3),
 
   ('Teclado Inalámbrico Keychron K6', 'Teclado compacto e inalámbrico con compatibilidad Mac/Windows', 459.00, 12,
-   'https://example.com/images/keychron-k6.jpg',
+   'https://eatkxdfnzqpqmtljjxye.supabase.co/storage/v1/object/public/previews/ia_image_cellphone.png',
    NOW(), TRUE, 3);
